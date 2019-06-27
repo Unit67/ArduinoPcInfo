@@ -1,2 +1,2 @@
-# ArduinoPcInfo
+# Hardware Monitor
 Arduino Sketch
