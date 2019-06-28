@@ -13,12 +13,8 @@
             <TextBox Name="TextBoxRate" mah:TextBoxHelper.Watermark="BaudRate" Width="100"/>
             <TextBox Name="TextBoxDelay" mah:TextBoxHelper.Watermark="Delay" Width="100"/>
             <Button Click="Button_Click_Start" Content="Start"/>
-            <Label Name="LabelCPUTemp" Width="100"/>
-            <Label Name="LabelGPUTemp" Width="100"/>
-            <Label Visibility="Collapsed" Name="RamTemp" Width="100"/>
-            <Label Name="CPUusage" Width="100"/>
-            <Label Name="GPUusage" Width="100"/>
-            <Label Name="RamUsage" Width="100"/>
+            <Button Name="Stop" Content="Stop" Click="Stop_Click"/>
+            <CheckBox Unchecked="CheckBoxSendAfterStart_Unchecked" Checked="CheckBoxSendAfterStart_Checked" Name="CheckBoxSendAfterStart" Content="send after the start"/>
         </mah:WindowCommands>    
     </mah:MetroWindow.RightWindowCommands>
 </mah:MetroWindow>

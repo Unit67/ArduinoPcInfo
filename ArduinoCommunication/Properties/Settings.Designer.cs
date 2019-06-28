@@ -58,5 +58,17 @@ namespace ArduinoCommunication.Properties {
                 this["BaudRate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SendAfterStart {
+            get {
+                return ((bool)(this["SendAfterStart"]));
+            }
+            set {
+                this["SendAfterStart"] = value;
+            }
+        }
     }
 }

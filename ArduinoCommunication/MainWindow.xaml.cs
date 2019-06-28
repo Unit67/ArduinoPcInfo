@@ -35,11 +35,18 @@ namespace ArduinoCommunication
             Port = Properties.Settings.Default.Port;
             BaudRate = Properties.Settings.Default.BaudRate;
             Delay = Properties.Settings.Default.Delay;
+            _Sending = Properties.Settings.Default.SendAfterStart;
+
+            CheckBoxSendAfterStart.IsChecked = Properties.Settings.Default.SendAfterStart;
             TextBoxDelay.Text = Delay.ToString();
             TextBoxRate.Text = BaudRate.ToString();
             TextBoxCom.Text = Port.ToString();
             Closing += OnClosing;
 
+            if(_Sending == true)
+            {
+                timer.Start();
+            }
         }
         public ArduinoLedScreen74hc595.Class1 Arduino = new Class1();
         CpuInfoLib.CPUINFO CPUinfo = new CPUINFO();
@@ -47,6 +54,7 @@ namespace ArduinoCommunication
         public string Port;
         public int BaudRate;
         public float Delay;
+        private bool _Sending;
 
         internal void OnClosing(object sender, CancelEventArgs e)
         {
@@ -67,6 +75,7 @@ namespace ArduinoCommunication
 
         private void Button_Click_Start(object sender, RoutedEventArgs e)
         {
+            _Sending = true;
             Port = TextBoxCom.Text;
             try
             {
@@ -75,11 +84,11 @@ namespace ArduinoCommunication
 
                 timer.Interval = TimeSpan.FromSeconds(Delay);
 
-                if(Arduino.serialPort.IsOpen)
+                if (Arduino.serialPort.IsOpen)
                 {
-                    timer.Start();        
+                    timer.Start();
                 }
-                else if(!Arduino.serialPort.IsOpen)
+                else if (!Arduino.serialPort.IsOpen)
                 {
                     Arduino.OpenPort(Port, BaudRate);
                     timer.Start();
@@ -89,27 +98,65 @@ namespace ArduinoCommunication
             {
                 MessageBox.Show("Error: " + Ex.Message);
             }
-
         }
 
         void timer_Tick(object sender, EventArgs e)
         {
-            
-            /*Arduino.serialPort.Write("CT:" + (int)CPUinfo.CPUTemp() + ";"); //CPU Temp
-            Arduino.serialPort.Write("GT:" + (int)CPUinfo.GPUTemp() + ";"); //GPU Temp
-            Arduino.serialPort.Write("CU:" + (int)CPUinfo.CPUusage() + ";"); // CPU Usage
-            Arduino.serialPort.Write("GU:" + (int)CPUinfo.GPUusage() + ";"); //GPU Usage
-            Arduino.serialPort.Write("RU:" + (int)CPUinfo.RamUsage() + ";"); //Ram Usage
-            //Arduino.serialPort.Write("TR:" + (int)CPUinfo.RamTemp() + ";"); //Ram Temp*/
 
-            Arduino.SetNumber((int)CPUinfo.CPUTemp());
+            if (_Sending == true)
+            {
+                if (!Arduino.serialPort.IsOpen)
+                {
+                    try
+                    {
+                        Arduino.serialPort.Close();
+                        Arduino.OpenPort(Port, BaudRate);
+                    }
+                    catch (Exception Ex)
+                    {
+                        //MessageBox.Show("Error: " + Ex);
+                    }
+                }
 
-            LabelCPUTemp.Content = "CPU Temp: " + CPUinfo.CPUTemp() + "°C";//
-            LabelGPUTemp.Content = "GPU Temp" + CPUinfo.GPUTemp() + "°C";//
-            CPUusage.Content = "CPU Usage" + (int)CPUinfo.CPUusage();//
-            GPUusage.Content = "GPU Usage" + CPUinfo.GPUusage();//
-            RamUsage.Content = "Ram Usage" + (int)CPUinfo.RamUsage();//
-            RamTemp.Content = "Ram Temp: " + CPUinfo.RamTemp();//
+                if (Arduino.serialPort.IsOpen)
+                {
+                    /*Arduino.serialPort.Write("CT:" + (int)CPUinfo.CPUTemp() + ";"); //CPU Temp
+                    Arduino.serialPort.Write("GT:" + (int)CPUinfo.GPUTemp() + ";"); //GPU Temp
+                    Arduino.serialPort.Write("CU:" + (int)CPUinfo.CPUusage() + ";"); // CPU Usage
+                    Arduino.serialPort.Write("GU:" + (int)CPUinfo.GPUusage() + ";"); //GPU Usage
+                    Arduino.serialPort.Write("RU:" + (int)CPUinfo.RamUsage() + ";"); //Ram Usage*/
+                    Arduino.SetNumber((int)CPUinfo.CPUTemp());
+                }
+            }
+            else
+            {
+                if(Arduino.serialPort.IsOpen)
+                {
+                    Arduino.SetNumber(0);
+                    Arduino.serialPort.Close();
+                }
+            }
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            _Sending = false;
+            Arduino.serialPort.Close();
+        }
+
+        private void CheckBoxSendAfterStart_Checked(object sender, RoutedEventArgs e)
+        {
+            SaveCBsendAfterStart();
+        }
+        private void CheckBoxSendAfterStart_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SaveCBsendAfterStart();
+        }
+
+        private void SaveCBsendAfterStart()
+        {
+            Properties.Settings.Default.SendAfterStart = CheckBoxSendAfterStart.IsChecked.Value;
+            Properties.Settings.Default.Save();
         }
 
     }
