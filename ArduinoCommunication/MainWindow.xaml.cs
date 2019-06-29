@@ -19,6 +19,8 @@ using System.Diagnostics;
 using System.Windows.Threading;
 using CpuInfoLib;
 using System.ComponentModel;
+using Microsoft.Win32;
+using System.IO;
 
 namespace ArduinoCommunication
 {
@@ -55,6 +57,33 @@ namespace ArduinoCommunication
         public int BaudRate;
         public float Delay;
         private bool _Sending;
+
+        private void AddToAutostart(bool enabled, string name)
+        {
+            string Path = Directory.GetCurrentDirectory();
+            string yourKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+
+            Microsoft.Win32.RegistryKey startupKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(yourKey);
+
+            if (enabled)
+            {
+                if (startupKey.GetValue(name) == null)
+                {
+                    startupKey.Close();
+                    startupKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(yourKey, true);
+                    // Add startup reg key
+                    startupKey.SetValue(name, Path.ToString());
+                    startupKey.Close();
+                }
+            }
+            else
+            {
+                // remove startup
+                startupKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(yourKey, true);
+                startupKey.DeleteValue(name, false);
+                startupKey.Close();
+            }
+        }
 
         internal void OnClosing(object sender, CancelEventArgs e)
         {
@@ -159,5 +188,14 @@ namespace ArduinoCommunication
             Properties.Settings.Default.Save();
         }
 
+        private void BtnAddToAutoStart_Click(object sender, RoutedEventArgs e)
+        {
+            AddToAutostart(true, "Hardware_Monitor");
+        }
+
+        private void BtnRemoveFromAutoStart_Click(object sender, RoutedEventArgs e)
+        {
+            AddToAutostart(false, "Hardware_Monitor");
+        }
     }
 }

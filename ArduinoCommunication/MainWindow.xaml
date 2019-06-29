@@ -14,6 +14,8 @@
             <TextBox Name="TextBoxDelay" mah:TextBoxHelper.Watermark="Delay" Width="100"/>
             <Button Click="Button_Click_Start" Content="Start"/>
             <Button Name="Stop" Content="Stop" Click="Stop_Click"/>
+            <Button Click="BtnAddToAutoStart_Click" Name="BtnAddToAutoStart" Content="Add to autostart"/>
+            <Button Click="BtnRemoveFromAutoStart_Click" Name="BtnRemoveFromAutoStart" Content="Remove from autostart"/>
             <CheckBox Unchecked="CheckBoxSendAfterStart_Unchecked" Checked="CheckBoxSendAfterStart_Checked" Name="CheckBoxSendAfterStart" Content="send after the start"/>
         </mah:WindowCommands>    
     </mah:MetroWindow.RightWindowCommands>
