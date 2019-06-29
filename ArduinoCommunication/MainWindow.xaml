@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoCommunication"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Title="Arduino " Height="450" Width="1100" MaxHeight="29">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>

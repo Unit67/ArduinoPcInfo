@@ -149,12 +149,12 @@ namespace ArduinoCommunication
 
                 if (Arduino.serialPort.IsOpen)
                 {
-                    /*Arduino.serialPort.Write("CT:" + (int)CPUinfo.CPUTemp() + ";"); //CPU Temp
+                    Arduino.serialPort.Write("CT:" + (int)CPUinfo.CPUTemp() + ";"); //CPU Temp
                     Arduino.serialPort.Write("GT:" + (int)CPUinfo.GPUTemp() + ";"); //GPU Temp
                     Arduino.serialPort.Write("CU:" + (int)CPUinfo.CPUusage() + ";"); // CPU Usage
                     Arduino.serialPort.Write("GU:" + (int)CPUinfo.GPUusage() + ";"); //GPU Usage
                     Arduino.serialPort.Write("RU:" + (int)CPUinfo.RamUsage() + ";"); //Ram Usage*/
-                    Arduino.SetNumber((int)CPUinfo.CPUTemp());
+                    //Arduino.SetNumber((int)CPUinfo.CPUTemp());
                 }
             }
             else
