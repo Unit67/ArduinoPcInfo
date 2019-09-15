@@ -34,7 +34,7 @@ namespace ArduinoCommunication
             InitializeComponent();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timer_Tick;
-            Port = Properties.Settings.Default.Port;
+            _Port = Properties.Settings.Default.Port;
             BaudRate = Properties.Settings.Default.BaudRate;
             Delay = Properties.Settings.Default.Delay;
             _Sending = Properties.Settings.Default.SendAfterStart;
@@ -42,7 +42,7 @@ namespace ArduinoCommunication
             CheckBoxSendAfterStart.IsChecked = Properties.Settings.Default.SendAfterStart;
             TextBoxDelay.Text = Delay.ToString();
             TextBoxRate.Text = BaudRate.ToString();
-            TextBoxCom.Text = Port.ToString();
+            TextBoxCom.Text = _Port.ToString();
             Closing += OnClosing;
 
             if(_Sending == true)
@@ -53,7 +53,7 @@ namespace ArduinoCommunication
         public ArduinoLedScreen74hc595.Class1 Arduino = new Class1();
         CpuInfoLib.CPUINFO CPUinfo = new CPUINFO();
         DispatcherTimer timer = new DispatcherTimer();
-        public string Port;
+        private string _Port;
         public int BaudRate;
         public float Delay;
         private bool _Sending;
@@ -89,7 +89,7 @@ namespace ArduinoCommunication
         {
             try
             {
-                Properties.Settings.Default.Port = Port.ToString();
+                Properties.Settings.Default.Port = _Port.ToString();
                 Properties.Settings.Default.Delay = Delay;
                 Properties.Settings.Default.BaudRate = BaudRate;
 
@@ -105,7 +105,7 @@ namespace ArduinoCommunication
         private void Button_Click_Start(object sender, RoutedEventArgs e)
         {
             _Sending = true;
-            Port = TextBoxCom.Text;
+            _Port = TextBoxCom.Text;
             try
             {
                 Int32.TryParse(TextBoxRate.Text, out BaudRate);
@@ -119,7 +119,7 @@ namespace ArduinoCommunication
                 }
                 else if (!Arduino.serialPort.IsOpen)
                 {
-                    Arduino.OpenPort(Port, BaudRate);
+                    Arduino.OpenPort(_Port, BaudRate);
                     timer.Start();
                 }
             }
@@ -139,7 +139,7 @@ namespace ArduinoCommunication
                     try
                     {
                         Arduino.serialPort.Close();
-                        Arduino.OpenPort(Port, BaudRate);
+                        Arduino.OpenPort(_Port, BaudRate);
                     }
                     catch (Exception Ex)
                     {
@@ -149,11 +149,18 @@ namespace ArduinoCommunication
 
                 if (Arduino.serialPort.IsOpen)
                 {
-                    Arduino.serialPort.Write("CT:" + (int)CPUinfo.CPUTemp() + ";"); //CPU Temp
-                    Arduino.serialPort.Write("GT:" + (int)CPUinfo.GPUTemp() + ";"); //GPU Temp
-                    Arduino.serialPort.Write("CU:" + (int)CPUinfo.CPUusage() + ";"); // CPU Usage
-                    Arduino.serialPort.Write("GU:" + (int)CPUinfo.GPUusage() + ";"); //GPU Usage
-                    Arduino.serialPort.Write("RU:" + (int)CPUinfo.RamUsage() + ";"); //Ram Usage*/
+                    try
+                    {
+                        Arduino.serialPort.Write("CT:" + (int)CPUinfo.CPUTemp() + ";"); //CPU Temp
+                        Arduino.serialPort.Write("GT:" + (int)CPUinfo.GPUTemp() + ";"); //GPU Temp
+                        Arduino.serialPort.Write("CU:" + (int)CPUinfo.CPUusage() + ";"); // CPU Usage
+                        Arduino.serialPort.Write("GU:" + (int)CPUinfo.GPUusage() + ";"); //GPU Usage
+                        Arduino.serialPort.Write("RU:" + (int)CPUinfo.RamUsage() + ";"); //Ram Usage*/
+                    }
+                    catch(Exception Ex)
+                    {
+                        MessageBox.Show("Fatal Error: " + Ex.Message);
+                    }
                     //Arduino.SetNumber((int)CPUinfo.CPUTemp());
                 }
             }

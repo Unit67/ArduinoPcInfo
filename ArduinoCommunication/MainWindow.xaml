@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ArduinoCommunication"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Arduino " Height="450" Width="1100" MaxHeight="29">
+        Title="Arduino " Height="29.285" Width="1100" MaxHeight="29">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
             <TextBox Name="TextBoxCom" mah:TextBoxHelper.Watermark="Port" Width="100"/>
@@ -18,6 +18,6 @@
             <Button Click="BtnAddToAutoStart_Click" Name="BtnAddToAutoStart" Content="Add to autostart"/>
             <Button Click="BtnRemoveFromAutoStart_Click" Name="BtnRemoveFromAutoStart" Content="Remove from autostart"/>
             <CheckBox Unchecked="CheckBoxSendAfterStart_Unchecked" Checked="CheckBoxSendAfterStart_Checked" Name="CheckBoxSendAfterStart" Content="send after the start"/>
-        </mah:WindowCommands>    
+        </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
 </mah:MetroWindow>
