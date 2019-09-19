@@ -89,6 +89,7 @@ namespace ArduinoCommunication
         {
             try
             {
+                Arduino.serialPort.Close();
                 Properties.Settings.Default.Port = _Port.ToString();
                 Properties.Settings.Default.Delay = Delay;
                 Properties.Settings.Default.BaudRate = BaudRate;
